@@ -1,0 +1,16 @@
+{
+  "name": "sidescroller",
+  "version": "1.0.0",
+  "description": "sidescroller game",
+  "main": "index.html",
+  "scripts": {
+    "start": "./node_modules/.bin/http-server -a localhost -p 8000 -c-1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "david",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^13.0.1",
+    "phaser": "^3.55.2"
+  }
+}
