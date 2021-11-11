@@ -1,62 +1,63 @@
-let collisionLayer;
-let w;
-let h;
 class BaseScene extends Phaser.Scene {
-    constructor() {
-        super({ key: 'BaseScene' });
+    constructor(key) {
+        super({ key });
+        this.key = key;
     }
 
-    preload() {
-        this.load.image('tiles', 'assets/Tiles/Prison/Assets/Assets.png');
-        this.load.tilemapTiledJSON('castle1', 'assets/Tiles/castle1.json');
-        this.load.atlas('warrior', 'assets/Warrior/SpriteSheet/Warrior_Sheet-Effect.png', 
-        '../assets/Warrior/warriorsprites.json');
+    init() {
+        this.scene.setVisible(false, this.key);
+        this.prevSceneKey = this.key;
+        this.nextSceneKey = null;
+        this.transition = true;
+        this.input.keyboard.removeAllListeners();
     }
     
-    create() {
-        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    create(tilemap, tileset) {
+        // controls
+        this.keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        this.keyUp = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.keyDown = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         
-        this.map = this.add.tilemap('castle1');
-        const tileset = this.map.addTilesetImage('Assets', 'tiles');
-        this.backgroundLayer = this.map.createLayer('backgroundLayer', tileset);
-        collisionLayer = this.map.createLayer('collisionLayer', tileset);
-        this.goalLayer = this.map.createLayer('goalLayer', tileset);
+        // tilemap
+        this.map = this.make.tilemap(tilemap);
+        this.tileset = this.map.addTilesetImage(tileset);
 
-        player = new Player({ scene: this, x: 100, y: 100, sprite: 'warrior' });
-        w = player.width;
-        h = player.height;
-        // const cropRect = new Phaser.GameObjects.Rectangle(player.scene, 0, 0, 16, 32);
-        player.setBodySize(16, 32);
-        collisionLayer.setCollisionByExclusion([-1]);
-        this.physics.add.collider(player, collisionLayer);
+        this.backgroundLayer = this.map.createLayer('backgroundLayer', this.tileset);
+        this.collisionLayer = this.map.createLayer('collisionLayer', this.tileset);
+        this.goalLayer = this.map.createLayer('goalLayer', this.tileset);
+
+        // player
+        this.player = new Player({ scene: this, x: 100, y: 150 });
+        
+        // this.collisionLayer.setCollisionByExclusion([-1]);
+        // this.physics.add.collider(this.player, this.collisionLayer);
     }
 
     update() {
-        if (keyA.isDown) {
-            player.setVelocityX(-100);
-        } else if (keyD.isDown) {
-            player.setVelocityX(100);
-        } else {
-            player.setVelocityX(0);
-        }
-    
-        if (keyW.isDown) {
-            player.setVelocityY(-100);
-        } else if (keyS.isDown) {
-            player.setVelocityX(0);
-        }
-
-        // if (this.input.x < w && this.input.y < h)
-        // {
-        //     player.x = this.input.x;
-        //     player.y = this.input.y;
-        //     cropRect.x = this.input.x;
-        //     cropRect.y = this.input.y;
-
-        //     player.updateCrop();
+        // if (this.transition === false) {
+            if (this.keyLeft.isDown) {
+                console.log('left');
+                this.player.left();
+            } else if (this.keyRight.isDown) {
+                console.log('right');
+                this.player.right();
+            } else if (this.keyUp.isDown) {
+                console.log('up');
+                this.player.jump();
+            } else if (this.keyDown.isDown) {
+                console.log('down');
+                this.player.crouch();
+            }
         // }
+    }
+
+    onChangeScene() {
+        this.transition = true;
+        this.player.stop();
+    }
+
+    changeScene() {
+        this.scene.start(this.nextSceneKey, this.prevSceneKey);
     }
 }

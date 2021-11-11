@@ -11,7 +11,7 @@
          "name":"backgroundLayer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":50,
          "x":0,
          "y":0
@@ -39,7 +39,7 @@
          "name":"goalLayer",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":50,
          "x":0,
          "y":0
@@ -54,11 +54,11 @@
         {
          "columns":9,
          "firstgid":1,
-         "image":"Prison\/Assets\/Assets.png",
+         "image":"Prison\/Assets\/tiles.png",
          "imageheight":320,
          "imagewidth":144,
          "margin":0,
-         "name":"Assets",
+         "name":"tiles",
          "spacing":0,
          "tilecount":180,
          "tileheight":16,
